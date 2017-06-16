@@ -16,14 +16,14 @@
             link: function($scope, element, attrs, ctrl) {
                 $scope.popoverClass = attrs.popoverClass;
                 $scope.dropDirection = attrs.direction || 'bottom';
-                var left, top;
+                var left, top, right;
                 var trigger = document.querySelector('#'+$scope.trigger);
                 var target = document.querySelector('.ng-popover[trigger="'+$scope.trigger+'"]');
 
                 // Add click event listener to trigger
                 trigger.addEventListener('click', function(ev){
                     var left, top;
-                    var trigger = this; //get trigger element 
+                    var trigger = this; //get trigger element
                     var target =  document.querySelector('.ng-popover[trigger="'+$scope.trigger+'"]'); //get triger's target popover
                     ev.preventDefault();
                     calcPopoverPosition(trigger, target); //calculate the position of the popover
@@ -46,9 +46,11 @@
                 var getTriggerOffset = function(){
                     var triggerRect = trigger.getBoundingClientRect();
                     var bodyRect = document.body.getBoundingClientRect();
+
                     return {
-                        top: triggerRect.top + document.body.scrollTop,
-                        left: triggerRect.left + document.body.scrollLeft
+                        top: triggerRect.top,
+                        left: triggerRect.left,
+                        right: bodyRect.right - triggerRect.right
                     }
                 };
 
@@ -71,7 +73,7 @@
                             left = getTriggerOffset().left + triggerWidth + 10 + 'px';
                             top = getTriggerOffset().top + 'px';
                             break;
-                        } 
+                        }
 
                         case'top':{
                             left = getTriggerOffset().left + 'px';
@@ -80,12 +82,18 @@
                         }
 
                         default:{
-                            left = getTriggerOffset().left +'px';
+                            right = getTriggerOffset().right +'px';
                             top = getTriggerOffset().top + triggerHeight + 10 + 'px'
                         }
                     }
+
                     target.style.position = 'absolute';
-                    target.style.left = left;
+
+                    if(right)
+                      target.style.right = right;
+                    else
+                      target.style.left = left;
+
                     target.style.top = top;
                 }
                 calcPopoverPosition(trigger, target);
