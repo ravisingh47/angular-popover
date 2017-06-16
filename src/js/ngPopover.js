@@ -10,12 +10,15 @@
                 onClose: '&',
                 onOpen: '&',
                 popoverClass: '@',
+                arrowDirection: '@',
             },
             replace: true,
             transclude: true, // we want to insert custom content inside the directive
             link: function($scope, element, attrs, ctrl) {
                 $scope.popoverClass = attrs.popoverClass;
                 $scope.dropDirection = attrs.direction || 'bottom';
+                $scope.arrowDirection = attrs.arrowDirection;
+                debugger
                 var left, top, right;
                 var trigger = document.querySelector('#'+$scope.trigger);
                 var target = document.querySelector('.ng-popover[trigger="'+$scope.trigger+'"]');
@@ -89,12 +92,13 @@
 
                     target.style.position = 'absolute';
 
-                    if(right)
+                    if(right && $scope.arrowDirection!="left")
                       target.style.right = right;
                     else
                       target.style.left = left;
 
                     target.style.top = top;
+
                 }
                 calcPopoverPosition(trigger, target);
             },
@@ -125,7 +129,7 @@
                     document.body.removeEventListener('click', bodyListenerLogic)
                 }
             }],
-            template: '<div class="ng-popover hide"><div class="ng-popover-wrapper {{dropDirection}}"><div class="ng-popover-content" ng-class="popoverClass"><ng-transclude></ng-transclude></div></div></div>'
+            template: '<div class="ng-popover hide"><div class="ng-popover-wrapper {{dropDirection}}" ng-show="{{!arrowDirection}}"><div class="ng-popover-content" ng-class="popoverClass"><ng-transclude></ng-transclude></div></div><div class="ng-popover-wrapper {{dropDirection}}-{{arrowDirection}}" ng-show="{{arrowDirection}}"><div class="ng-popover-content" ng-class="popoverClass"><ng-transclude></ng-transclude></div></div></div>'
         }
     });
 
