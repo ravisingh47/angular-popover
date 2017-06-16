@@ -18,7 +18,12 @@
                 $scope.popoverClass = attrs.popoverClass;
                 $scope.dropDirection = attrs.direction || 'bottom';
                 $scope.arrowDirection = attrs.arrowDirection;
-                debugger
+
+                if($scope.arrowDirection == "left")
+                  $scope.popoverDirectionClass = $scope.dropDirection + "-" + $scope.arrowDirection;
+                else
+                  $scope.popoverDirectionClass = $scope.dropDirection;
+
                 var left, top, right;
                 var trigger = document.querySelector('#'+$scope.trigger);
                 var target = document.querySelector('.ng-popover[trigger="'+$scope.trigger+'"]');
@@ -129,7 +134,7 @@
                     document.body.removeEventListener('click', bodyListenerLogic)
                 }
             }],
-            template: '<div class="ng-popover hide"><div class="ng-popover-wrapper {{dropDirection}}" ng-show="{{!arrowDirection}}"><div class="ng-popover-content" ng-class="popoverClass"><ng-transclude></ng-transclude></div></div><div class="ng-popover-wrapper {{dropDirection}}-{{arrowDirection}}" ng-show="{{arrowDirection}}"><div class="ng-popover-content" ng-class="popoverClass"><ng-transclude></ng-transclude></div></div></div>'
+            template: '<div class="ng-popover hide"><div class="ng-popover-wrapper {{popoverDirectionClass}}"><div class="ng-popover-content" ng-class="popoverClass"><ng-transclude></ng-transclude></div></div></div>'
         }
     });
 
